@@ -27,6 +27,7 @@ public class StudentService {
 //	private List<Student> studentList = new ArrayList<Student>(); // 검색, 조회에 효율적
 	private List<Student> studentList = new LinkedList<Student>(); // 추가, 수정, 삭제에 효율적
 	
+	
 	/**
 	 * 생성자
 	 */
