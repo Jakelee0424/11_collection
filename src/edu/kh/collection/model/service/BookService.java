@@ -1,6 +1,5 @@
 package edu.kh.collection.model.service;
 
-import java.awt.DisplayMode;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
@@ -10,13 +9,21 @@ import java.util.Scanner;
 import java.util.Set;
 
 import edu.kh.collection.model.vo.Book;
-import edu.kh.collection.model.vo.Student;
 
 public class BookService {
 
 	Scanner sc = new Scanner(System.in);
-	List<Book> list = new LinkedList<Book>();
-	Map<Integer, String> map = new HashMap<Integer, String>();
+	private List<Book> list = new LinkedList<Book>();
+	private Map<Integer, String> map = new HashMap<Integer, String>();
+	
+	public BookService() { // 테스트 객체
+		
+		list.add(new Book("소년을 위로해줘", "은희경", 15000, "혜안"));
+		list.add(new Book("7년의 밤", "정유정", 12000, "문학동네"));
+		list.add(new Book("내 인생의 스프링캠프", "정유정", 14000, "문학동네"));
+		list.add(new Book("네 심장을 쏴라", "정유정", 10000, "문학동네"));
+		list.add(new Book("엄마를 부탁해", "신경숙", 18000, "문학동네"));
+	}
 	
 	public void displayMenu() { // 메뉴 화면
 		int input = 0;
@@ -31,6 +38,7 @@ public class BookService {
 			System.out.println("6. 즐겨찾기 추가");
 			System.out.println("7. 즐겨찾기 조회");
 			System.out.println("8. 즐겨찾기 제거");
+			System.out.println("9. 도서 추천");
 			System.out.println("0. 프로그램 종료");
 			System.out.println("-----------------");
 			System.out.print("번호 입력 >> ");
@@ -47,12 +55,13 @@ public class BookService {
 				case 6 : favorite(); break;
 				case 7 : lookFavorite(); break;
 				case 8 : deleteFavorite(); break;
+				case 9 : recommendBook(); break;
 				case 0 : System.out.println("프로그램 종료"); break;
 				default : System.out.println("잘못 입력하셨습니다.");
 
 				}
 
-			} catch(InputMismatchException e) {
+			} catch(Exception e) {
 				System.out.println("\nerror : 입력형식이 유효하지 않습니다. 다시 시도해주세요\n");
 				sc.nextLine(); 
 				input = -1; 
@@ -69,9 +78,8 @@ public class BookService {
 		System.out.print("책 제목 >> ");
 		String title = sc.nextLine();
 		
-		
 		System.out.print("책 저자 >> ");
-		String author = sc.next();
+		String author = sc.nextLine();
 		
 		System.out.print("가격 >> ");
 		int price = sc.nextInt();
@@ -98,41 +106,35 @@ public class BookService {
 		System.out.println("1. 도서명으로 검색");
 		System.out.println("2. 작가명으로 검색");
 		System.out.println("3. 출판사로 검색");
-		System.out.print("번호 입력 >>");
+		System.out.print("번호 입력 >> ");
 		int num = sc.nextInt();
 		sc.nextLine();
 		
 		if (num == 1 ) {
-			System.out.print("도서명을 입력하세요 >> ");
+			System.out.print("\n도서명을 입력하세요 >> ");
 			String input = sc.nextLine();
 		
 			for(Book b : list) {
 				if(b.getTitle().contains(input)) {
-					System.out.println("\n"+b+"\n");
-				}else {
-					System.out.println("\n등록된 정보가 없습니다. \n");
+					System.out.print(b+"\n");
 				}
 			}	
 		} else if(num == 2) {
-			System.out.print("작가명을 입력하세요 >> ");
+			System.out.print("\n작가명을 입력하세요 >> ");
 			String input = sc.nextLine();
 
 			for(Book b : list) {
 				if(b.getAuthor().contains(input)) {
-					System.out.println("\n"+b+"\n");
-				}else {
-					System.out.println("\n등록된 정보가 없습니다. \n");
+					System.out.print(b+"\n");
 				}
 			}
 		} else if(num ==3 ) {
-			System.out.print("출판사명을 입력하세요 >> ");
+			System.out.print("\n출판사명을 입력하세요 >> ");
 			String input = sc.nextLine();
 
 			for(Book b : list) {
 				if(b.getPublisier().contains(input)) {
-					System.out.println("\n"+b+"\n");
-				}else {
-					System.out.println("\n등록된 정보가 없습니다. \n");
+					System.out.println(b+"\n");
 				}
 			}
 
@@ -185,9 +187,10 @@ public class BookService {
 				list.get(input).setPublisier(publicier);
 				System.out.println("출판사 변경 완료!\n");
 				
-			} else
-				
-			System.out.println("잘못 입력하셨습니다.");
+			} else {
+				System.out.println("잘못 입력하셨습니다.");
+			}
+			
 		}
 		
 		
@@ -215,7 +218,7 @@ public class BookService {
 	
 	}
 
-	public void favorite() throws InputMismatchException { // 즐겨찾기 추가
+	public void favorite() throws IndexOutOfBoundsException { // 즐겨찾기 추가
 		System.out.println("\n**** 즐겨찾기 추가 ****\n");
 		
 		System.out.println("즐겨찾기 목록에 추가할 도서의 인덱스 번호를 입력하세요");
@@ -232,7 +235,6 @@ public class BookService {
 		
 		for(Integer key : set) {
 			System.out.println(key + "번 인덱스의 "+ map.get(key));		
-		
 		}
 		
 	}
@@ -260,4 +262,11 @@ public class BookService {
 		
 	}
 	
+	public void recommendBook() { // 도서 추천
+		System.out.println("\n**** 도서 추천 ****\n");
+		
+		int num = (int)(Math.random()*list.size()); 
+		System.out.println(list.get(num));
+	
+	}
 }
